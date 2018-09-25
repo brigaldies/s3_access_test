@@ -14,7 +14,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='AWS S3 file access tests suite.')
     parser.add_argument('-b', '--s3bucket', help='S3 bucket name', required=True)
     parser.add_argument('-f', '--testfiles', help='List of files to test with', required=True)
-    parser.add_argument('-n', '--testcount', help='Retrieval test count', required=True)
+    parser.add_argument('-n', '--testcount', help='Retrieval test count', required=False)
+    parser.add_argument('-s', '--sleeptime', help='Sleep time between retrievals', required=False)
 
     args = parser.parse_args()
 
@@ -47,6 +48,15 @@ if __name__ == "__main__":
     if args.testcount:
         count = int(args.testcount)
 
+    sleep_time = 2000
+    if args.sleeptime:
+        sleep_time = int(args.sleeptime)
+
+    print('S3 bucket                 : {}'.format(s3_bucket_name))
+    print('test files                : {}'.format(testfiles))
+    print('Test count                : {}'.format(count))
+    print('Random sleep (Upper bound): {}'.format(sleep_time))
+
     exec_times = {}
     for i in np.arange(1, count + 1):
         # Alternate files in order to have S3 NOT cache objects:
@@ -63,12 +73,12 @@ if __name__ == "__main__":
             exec_times[s3_object_key].append(exec_time_ms)
 
             # Random pause
-            wait_time_ms = randint(1000, 2000)
+            wait_time_ms = randint(1000, sleep_time)
             print("Sleeping for {} ms...".format(wait_time_ms))
             time.sleep(wait_time_ms / 1000)
 
     for key, value in exec_times.items():
-        print('File {} retrieval test results:')
+        print('File {} retrieval test results:'.format(key))
         print('\tMin: {}'.format(np.round(np.min(exec_times[key]))))
         print('\tMax: {}'.format(np.round(np.max(exec_times[key]))))
         print('\tAvg: {}'.format(np.round(np.average(exec_times[key]))))
