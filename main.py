@@ -1,5 +1,7 @@
 # See AWS Python SDK documentation: https://boto3.amazonaws.com/v1/documentation/api/latest/guide/migrations3.html
 
+# Run the AWS Client to configure the AWS SDK key: aws configure
+
 import time
 
 import boto3
@@ -22,10 +24,7 @@ if __name__ == "__main__":
     s3_bucket = resource.Bucket(s3_bucket_name)
     print('\nUpload a test file to S3 bucket {} ...'.format(s3_bucket_name))
 
-    # s3_doc_key = 'the_adventure_of_tom_sawyer.txt'
-    # s3_doc_key = 'test_1.txt'
     s3_doc_key = 'test_1.txt'
-    # body = 'This is the content of a text file.'
     body = ''
 
     with open(s3_doc_key, "rt") as in_file:
@@ -34,6 +33,7 @@ if __name__ == "__main__":
     s3_bucket.put_object(Key=s3_doc_key, Body=body)
 
     # Retrieve a file from S3
+    # See https://dluo.me/s3databoto3
     print('Retrieving document key {}...'.format(s3_doc_key))
     start_time = time.monotonic()
     obj = client.get_object(Bucket=s3_bucket_name, Key=s3_doc_key)
