@@ -83,5 +83,6 @@ if __name__ == "__main__":
         print('\tMax: {}'.format(np.round(np.max(exec_times[key]))))
         print('\tAvg: {}'.format(np.round(np.average(exec_times[key]))))
         print('\tMed: {}'.format(np.round(np.median(exec_times[key]))))
+        print('\tStd: {}'.format(np.round(np.std(exec_times[key]))))
 
     # TODO: Plot of a random sample of 50K file download.
